@@ -6,7 +6,7 @@
 ## Sobre
 
 Aplicação fullstack (API Express em camadas + SQLite + frontend Bootstrap com Vanilla JS).
-O domínio do projeto será definido na Semana 2.
+O domínio do projeto será um sistema para auxiliar no gerenciamento de um pet shop, permitindo cadastrar animais, seus tutores e serviços realizados, como banho, tosa e consultas.
 
 ## Estrutura
 
