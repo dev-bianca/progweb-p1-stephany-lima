@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pet Shop | Gerenciador</title>
+
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  >
+  <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body class="bg-light">
+  <header class="bg-primary text-white py-4 mb-4">
+    <div class="container">
+      <h1 class="h3 mb-1">Pet Shop</h1>
+      <p class="mb-0">Gerenciamento de tutores e animais</p>
+    </div>
+  </header>
+
+  <main class="container pb-5">
+
+    <div id="aviso" class="mb-3" aria-live="polite"></div>
+
+    <!-- Seção de tutores -->
+    <section class="card shadow-sm mb-4">
+      <div class="card-header bg-white">
+        <h2 class="h5 mb-0">Tutores</h2>
+      </div>
+
+      <div class="card-body">
+        <form id="formTutor" class="row g-3 mb-4">
+          <input type="hidden" id="tutorId">
+
+          <div class="col-md-4">
+            <label for="tutorNome" class="form-label">Nome</label>
+            <input type="text" class="form-control" id="tutorNome" required>
+          </div>
+
+          <div class="col-md-4">
+            <label for="tutorTelefone" class="form-label">Telefone</label>
+            <input type="tel" class="form-control" id="tutorTelefone" required>
+          </div>
+
+          <div class="col-md-4">
+            <label for="tutorEmail" class="form-label">E-mail</label>
+            <input type="email" class="form-control" id="tutorEmail" required>
+          </div>
+
+          <div class="col-12">
+            <button type="submit" class="btn btn-primary" id="btnSalvarTutor">
+              Cadastrar tutor
+            </button>
+            <button type="button" class="btn btn-secondary d-none" id="btnCancelarTutor">
+              Cancelar edição
+            </button>
+          </div>
+        </form>
+
+        <div id="estadoTutores" class="text-center text-muted py-3">
+          Carregando tutores...
+        </div>
+
+        <div class="table-responsive">
+          <table class="table table-hover align-middle d-none" id="tabelaTutores">
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Telefone</th>
+                <th>E-mail</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="listaTutores"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Seção de animais -->
+    <section class="card shadow-sm">
+      <div class="card-header bg-white">
+        <h2 class="h5 mb-0">Animais</h2>
+      </div>
+
+      <div class="card-body">
+        <form id="formAnimal" class="row g-3 mb-4">
+          <input type="hidden" id="animalId">
+
+          <div class="col-md-4">
+            <label for="animalNome" class="form-label">Nome do animal</label>
+            <input type="text" class="form-control" id="animalNome" required>
+          </div>
+
+          <div class="col-md-4">
+            <label for="animalEspecie" class="form-label">Espécie</label>
+            <select class="form-select" id="animalEspecie" required>
+              <option value="">Selecione</option>
+              <option value="Cachorro">Cachorro</option>
+              <option value="Gato">Gato</option>
+              <option value="Ave">Ave</option>
+              <option value="Outro">Outro</option>
+            </select>
+          </div>
+
+          <div class="col-md-4">
+            <label for="animalRaca" class="form-label">Raça</label>
+            <input type="text" class="form-control" id="animalRaca">
+          </div>
+
+          <div class="col-md-6">
+            <label for="animalNascimento" class="form-label">Data de nascimento</label>
+            <input type="date" class="form-control" id="animalNascimento">
+          </div>
+
+          <div class="col-md-6">
+            <label for="animalTutor" class="form-label">Tutor responsável</label>
+            <select class="form-select" id="animalTutor" required>
+              <option value="">Selecione um tutor</option>
+            </select>
+          </div>
+
+          <div class="col-12">
+            <button type="submit" class="btn btn-primary" id="btnSalvarAnimal">
+              Cadastrar animal
+            </button>
+            <button type="button" class="btn btn-secondary d-none" id="btnCancelarAnimal">
+              Cancelar edição
+            </button>
+          </div>
+        </form>
+
+        <div id="estadoAnimais" class="text-center text-muted py-3">
+          Carregando animais...
+        </div>
+
+        <div class="table-responsive">
+          <table class="table table-hover align-middle d-none" id="tabelaAnimais">
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Espécie</th>
+                <th>Raça</th>
+                <th>Tutor</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="listaAnimais"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script type="module" src="./js/main.js"></script>
+</body>
+</html>
