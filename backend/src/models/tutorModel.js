@@ -1,50 +1,49 @@
-let tutores = [];
-let proximoId = 1;
+import db from "../db.js";
 
 export function listarTodos() {
-  return tutores;
+  return db.prepare("SELECT * FROM tutores").all();
 }
 
 export function buscarPorId(id) {
-  return tutores.find((tutor) => tutor.id === id);
+  return db.prepare("SELECT * FROM tutores WHERE id = ?").get(id);
 }
 
 export function buscarPorEmail(email) {
-  return tutores.find((tutor) => tutor.email === email);
+  return db.prepare("SELECT * FROM tutores WHERE email = ?").get(email);
 }
 
 export function criar(dados) {
-  const novoTutor = {
-    id: proximoId++,
-    ...dados,
-  };
+  const resultado = db
+    .prepare(
+      "INSERT INTO tutores (nome, telefone, email) VALUES (?, ?, ?)"
+    )
+    .run(dados.nome, dados.telefone, dados.email);
 
-  tutores.push(novoTutor);
-  return novoTutor;
+  return buscarPorId(Number(resultado.lastInsertRowid));
 }
 
 export function atualizar(id, dados) {
-  const indice = tutores.findIndex((tutor) => tutor.id === id);
+  const tutorAtual = buscarPorId(id);
 
-  if (indice === -1) {
+  if (!tutorAtual) {
     return null;
   }
 
-  tutores[indice] = {
-    ...tutores[indice],
-    ...dados,
-  };
+  const nome = dados.nome ?? tutorAtual.nome;
+  const telefone = dados.telefone ?? tutorAtual.telefone;
+  const email = dados.email ?? tutorAtual.email;
 
-  return tutores[indice];
+  db.prepare(
+    "UPDATE tutores SET nome = ?, telefone = ?, email = ? WHERE id = ?"
+  ).run(nome, telefone, email, id);
+
+  return buscarPorId(id);
 }
 
 export function remover(id) {
-  const indice = tutores.findIndex((tutor) => tutor.id === id);
+  const resultado = db
+    .prepare("DELETE FROM tutores WHERE id = ?")
+    .run(id);
 
-  if (indice === -1) {
-    return false;
-  }
-
-  tutores.splice(indice, 1);
-  return true;
+  return resultado.changes > 0;
 }

@@ -1,51 +1,46 @@
-
-let clientes = [];
-let proximoId = 1;
+import db from "../db.js";
 
 export function listarTodos() {
-  return clientes;
+  return db.prepare("SELECT * FROM clientes").all();
 }
 
 export function buscarPorId(id) {
-  return clientes.find((cliente) => cliente.id === id);
+  return db.prepare("SELECT * FROM clientes WHERE id = ?").get(id);
 }
 
 export function buscarPorCpf(cpf) {
-  return clientes.find((cliente) => cliente.cpf === cpf);
+  return db.prepare("SELECT * FROM clientes WHERE cpf = ?").get(cpf);
 }
 
 export function criar(dados) {
-  const novoCliente = {
-    id: proximoId++,
-    ...dados,
-  };
+  const resultado = db
+    .prepare("INSERT INTO clientes (nome, cpf) VALUES (?, ?)")
+    .run(dados.nome, dados.cpf);
 
-  clientes.push(novoCliente);
-  return novoCliente;
+  return buscarPorId(Number(resultado.lastInsertRowid));
 }
 
 export function atualizar(id, dados) {
-  const indice = clientes.findIndex((cliente) => cliente.id === id);
+  const clienteAtual = buscarPorId(id);
 
-  if (indice === -1) {
+  if (!clienteAtual) {
     return null;
   }
 
-  clientes[indice] = {
-    ...clientes[indice],
-    ...dados,
-  };
+  const nome = dados.nome ?? clienteAtual.nome;
+  const cpf = dados.cpf ?? clienteAtual.cpf;
 
-  return clientes[indice];
+  db.prepare(
+    "UPDATE clientes SET nome = ?, cpf = ? WHERE id = ?"
+  ).run(nome, cpf, id);
+
+  return buscarPorId(id);
 }
 
 export function remover(id) {
-  const indice = clientes.findIndex((cliente) => cliente.id === id);
+  const resultado = db
+    .prepare("DELETE FROM clientes WHERE id = ?")
+    .run(id);
 
-  if (indice === -1) {
-    return false;
-  }
-
-  clientes.splice(indice, 1);
-  return true;
+  return resultado.changes > 0;
 }

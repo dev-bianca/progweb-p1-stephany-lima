@@ -1,5 +1,5 @@
-
 import * as clienteModel from "../models/clienteModel.js";
+import * as contaModel from "../models/contaModel.js";
 import { Erro } from "../utils/erro.js";
 
 export function listarClientes() {
@@ -51,5 +51,13 @@ export function atualizarCliente(id, dados) {
 
 export function excluirCliente(id) {
   buscarCliente(id);
+
+  if (contaModel.existePorCliente(id)) {
+    throw new Erro(
+      "Não é possível excluir um cliente que possui contas vinculadas",
+      409
+    );
+  }
+
   clienteModel.remover(id);
 }

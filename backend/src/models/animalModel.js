@@ -1,50 +1,60 @@
-let animais = [];
-let proximoId = 1;
+import db from "../db.js";
 
 export function listarTodos() {
-  return animais;
+  return db.prepare("SELECT * FROM animais").all();
 }
 
 export function buscarPorId(id) {
-  return animais.find((animal) => animal.id === id);
+  return db.prepare("SELECT * FROM animais WHERE id = ?").get(id);
 }
 
 export function buscarPorNome(nome) {
-  return animais.find((animal) => animal.nome === nome);
+  return db.prepare("SELECT * FROM animais WHERE nome = ?").get(nome);
 }
 
 export function criar(dados) {
-  const novoAnimal = {
-    id: proximoId++,
-    ...dados,
-  };
+  const resultado = db
+    .prepare(`
+      INSERT INTO animais (nome, especie, raca, dataNascimento, tutorId)
+      VALUES (?, ?, ?, ?, ?)
+    `)
+    .run(
+      dados.nome,
+      dados.especie,
+      dados.raca,
+      dados.dataNascimento,
+      dados.tutorId
+    );
 
-  animais.push(novoAnimal);
-  return novoAnimal;
+  return buscarPorId(Number(resultado.lastInsertRowid));
 }
 
 export function atualizar(id, dados) {
-  const indice = animais.findIndex((animal) => animal.id === id);
+  const animalAtual = buscarPorId(id);
 
-  if (indice === -1) {
+  if (!animalAtual) {
     return null;
   }
 
-  animais[indice] = {
-    ...animais[indice],
-    ...dados,
-  };
+  const nome = dados.nome ?? animalAtual.nome;
+  const especie = dados.especie ?? animalAtual.especie;
+  const raca = dados.raca ?? animalAtual.raca;
+  const dataNascimento = dados.dataNascimento ?? animalAtual.dataNascimento;
+  const tutorId = dados.tutorId ?? animalAtual.tutorId;
 
-  return animais[indice];
+  db.prepare(`
+    UPDATE animais
+    SET nome = ?, especie = ?, raca = ?, dataNascimento = ?, tutorId = ?
+    WHERE id = ?
+  `).run(nome, especie, raca, dataNascimento, tutorId, id);
+
+  return buscarPorId(id);
 }
 
 export function remover(id) {
-  const indice = animais.findIndex((animal) => animal.id === id);
+  const resultado = db
+    .prepare("DELETE FROM animais WHERE id = ?")
+    .run(id);
 
-  if (indice === -1) {
-    return false;
-  }
-
-  animais.splice(indice, 1);
-  return true;
+  return resultado.changes > 0;
 }
