@@ -1,3 +1,6 @@
 node_modules/
 .env
 .DS_Store
+backend/petshop.db
+petshop.db
+banco.db
